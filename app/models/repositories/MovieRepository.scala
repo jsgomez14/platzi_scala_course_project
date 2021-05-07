@@ -31,8 +31,14 @@ class MovieRepository @Inject()(
         db.run(createSchema)
     }
 
-    def getAll = ???
-    def getOne = ???
+    def getAll = {
+        val q = movieQuery.sortBy(_.id)
+        db.run(q.result)
+    }
+    def getOne(id: String) = {
+        val q = movieQuery.filter(_.id === id)
+        db.run(q.result.headOption)
+    }
     def create = ???
     def update = ???
     def delete = ???
