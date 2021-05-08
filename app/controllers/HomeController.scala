@@ -1,9 +1,8 @@
 package controllers
 
 import javax.inject._
-import play.api._
-import play.api.mvc._
 import models.repositories.MovieRepository
+import play.api.mvc._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -11,26 +10,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents,
-    movieRepository: MovieRepository) extends AbstractController(cc) {
+class HomeController @Inject()(controllerComponents: ControllerComponents, movieRepository: MovieRepository)
+  extends AbstractController(controllerComponents) {
 
-  /**
-   * Create an Action to render an HTML page.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 
-  def dbInit() = Action.async { request =>
-    movieRepository.dbInit
-      .map(_ => Created("Tabla creada"))
-      .recover {ex =>
-          play.Logger.of("dbInit").debug("Error en dbInit", ex)
-          InternalServerError(s"Hubo un error")
+  def dbInit() = Action.async { request => movieRepository.dbInit
+        .map(_ => Created("BD created."))
+        .recover{ exception =>
+          play.Logger.of("dbInit").debug("Error on dbInit", exception)
+          InternalServerError(s"There was an issue")
         }
   }
 }
