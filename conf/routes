@@ -5,12 +5,12 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index()
-GET     /dbInit                     controllers.HomeController.dbInit
+GET     /dbInit                     controllers.HomeController.dbInit()
 
 # API Movies
-GET     /api/movies                 controllers.MovieController.getMovies
+GET     /api/movies                 controllers.MovieController.getMovies()
 GET     /api/movies/:id             controllers.MovieController.getMovie(id: String)
-POST    /api/movies                 controllers.MovieController.createMovie
+POST    /api/movies                 controllers.MovieController.createMovie()
 PATCH   /api/movies/:id             controllers.MovieController.updateMovie(id: String)
 DELETE  /api/movies/:id             controllers.MovieController.deleteMovie(id: String)
 
