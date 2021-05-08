@@ -20,6 +20,8 @@ class MovieController @Inject()(cc: ControllerComponents,
 
         implicit val serializator = Json.format[Movie]
 
+        val logger = play.Logger.of("MovieController")
+
         def getMovies = Action.async {
             movieRepository.getAll
                 .map(movies => {
@@ -28,7 +30,11 @@ class MovieController @Inject()(cc: ControllerComponents,
                     "message"->"Movies listed"
                     )
                     Ok(j)
-                })
+                }).recover{
+                    case ex =>
+                        logger.error("Falló en getMovies", ex)
+                        InternalServerError(s"Hubo un error: ${ex.getLocalizedMessage()}")
+                }
         }
 
         def getMovie(id: String) = Action.async {
@@ -39,7 +45,11 @@ class MovieController @Inject()(cc: ControllerComponents,
                     "message"->"Movie listed"
                     )
                     Ok(j)
-                })
+                }).recover{
+                    case ex =>
+                        logger.error("Falló en getMovie", ex)
+                        InternalServerError(s"Hubo un error: ${ex.getLocalizedMessage()}")
+                }
         }
 
         def createMovie = Action.async(parse.json) { request =>
@@ -56,6 +66,11 @@ class MovieController @Inject()(cc: ControllerComponents,
                         )
                         Ok(j)
                     })
+                    .recover{
+                    case ex =>
+                        logger.error("Falló en createMovie", ex)
+                        InternalServerError(s"Hubo un error: ${ex.getLocalizedMessage()}")
+                    }
                 }
             }
         }
@@ -74,6 +89,11 @@ class MovieController @Inject()(cc: ControllerComponents,
                         )
                         Ok(j)
                     })
+                    .recover{
+                    case ex =>
+                        logger.error("Falló en updateMovie", ex)
+                        InternalServerError(s"Hubo un error: ${ex.getLocalizedMessage()}")
+                    }
                 }
             }
         }
@@ -87,5 +107,10 @@ class MovieController @Inject()(cc: ControllerComponents,
                     )
                     Ok(j)
                 })
+                .recover{
+                    case ex =>
+                        logger.error("Falló en deleteMovie", ex)
+                        InternalServerError(s"Hubo un error: ${ex.getLocalizedMessage()}")
+                    }
         }
 }
