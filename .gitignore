@@ -2,6 +2,7 @@
 *.log
 .vscode
 .metals
+.bsp
 logs
 target
 /.idea
